@@ -1,0 +1,7 @@
+# Repos the daily grader hits.
+watched:
+  - ClickHouse/clickhouse-rs
+  - ClickHouse/ch-go
+  - ClickHouse/clickhouse-cpp
+  - ClickHouse/clickhouse-connect
+  - ClickHouse/clickhouse-go

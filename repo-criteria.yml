@@ -1,0 +1,13 @@
+# Criteria for the daily discovery run.
+criteria:
+  languages: [Ruby, Go, Python, C++, Rust]
+  topics_any: [database, search, information-retrieval, storage, embedding, indexing, olap, columnar]
+  stars_min: 200
+  pushed_within_days: 30
+  # Repos must satisfy at least one of these qualifiers (OR).
+  newcomer_qualifiers: ["good-first-issues:>0", "help-wanted-issues:>0"]
+  exclude_forks: true
+  exclude_archived: true
+
+# Never propose these. watched.yml is auto-excluded at runtime.
+rejected: []

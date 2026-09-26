@@ -1,0 +1,26 @@
+name: discover-daily
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # 09:00 UTC = 01:00 PST / 02:00 PDT
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --bin discover
+
+      - name: Run discover
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: ./target/debug/discover

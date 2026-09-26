@@ -1,0 +1,54 @@
+name: promote-to-watched
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  promote:
+    if: github.event.label.name == 'promote'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse issue body and append to watched.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          repo=$(gh issue view "$ISSUE" --json body -q .body | sed -n 's/^repo:[[:space:]]*//p' | head -1)
+          if [ -z "$repo" ]; then
+            gh issue comment "$ISSUE" --body "No 'repo: owner/name' line in issue body."
+            exit 1
+          fi
+          echo "REPO=$repo" >> "$GITHUB_ENV"
+          python3 - "$repo" <<'PY'
+          import sys, yaml, pathlib
+          repo = sys.argv[1]
+          p = pathlib.Path("watched.yml")
+          d = yaml.safe_load(p.read_text()) or {}
+          d.setdefault("watched", [])
+          if repo not in d["watched"]:
+              d["watched"].append(repo)
+          p.write_text(yaml.safe_dump(d, sort_keys=False))
+          PY
+
+      - name: Commit and close
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add watched.yml
+          if git diff --staged --quiet; then
+            gh issue close "$ISSUE" --comment "Already in watched.yml."
+          else
+            git commit -m "promote: $REPO (from #$ISSUE)"
+            git push
+            gh issue close "$ISSUE" --comment "Promoted."
+          fi

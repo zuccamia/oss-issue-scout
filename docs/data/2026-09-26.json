@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-26",
+  "reject_count": 15,
+  "accepts": [
+    {
+      "url": "https://github.com/ClickHouse/clickhouse-connect/issues/192",
+      "repo": "ClickHouse/clickhouse-connect",
+      "number": 192,
+      "title": "Support more granular timeouts for queries",
+      "labels": ["enhancement"],
+      "updated_at": "2026-09-16T10:12:00Z",
+      "comment_count": 7,
+      "has_assignee": false,
+      "has_comments": true
+    },
+    {
+      "url": "https://github.com/ClickHouse/clickhouse-connect/issues/303",
+      "repo": "ClickHouse/clickhouse-connect",
+      "number": 303,
+      "title": "Enable passing OTEL trace context to client's query methods",
+      "labels": ["enhancement"],
+      "updated_at": "2026-02-20T14:00:00Z",
+      "comment_count": 2,
+      "has_assignee": false,
+      "has_comments": true
+    },
+    {
+      "url": "https://github.com/ClickHouse/clickhouse-connect/issues/429",
+      "repo": "ClickHouse/clickhouse-connect",
+      "number": 429,
+      "title": "Support Custom Query Type Format",
+      "labels": ["enhancement"],
+      "updated_at": "2025-06-15T09:00:00Z",
+      "comment_count": 4,
+      "has_assignee": false,
+      "has_comments": true
+    }
+  ]
+}

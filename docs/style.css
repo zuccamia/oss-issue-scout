@@ -1,0 +1,60 @@
+:root {
+  --bg: #0d0f0d;
+  --fg: #c6f0c8;
+  --dim: #6f8f70;
+  --accent: #ffcf3b;
+}
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+body { margin: 0; }
+main {
+  max-width: 68ch;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid var(--dim);
+}
+h1, h2, h3 {
+  color: var(--accent);
+  border-bottom: 1px dashed var(--dim);
+  padding-bottom: .25rem;
+}
+a { color: var(--accent); }
+a:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+blockquote {
+  border-left: 3px solid var(--dim);
+  margin: 0 0 1rem;
+  padding-left: 1rem;
+  color: var(--dim);
+}
+hr { border: none; border-top: 1px dashed var(--dim); margin: 1.5rem 0; }
+pre { background: rgba(255, 255, 255, .04); padding: 0 .25em; }
+code {
+  display: inline-block;
+  background: rgba(255, 207, 59, .1);
+  color: var(--accent);
+  border: 1px solid var(--dim);
+  border-radius: 3px;
+  padding: 0 .5em;
+  margin: .15em .15em .15em 0;
+  font-size: .85em;
+  text-transform: lowercase;
+  letter-spacing: .02em;
+}
+.legend { font-size: .85em; color: var(--dim); }
+.card {
+  margin: 1.25rem 0;
+  padding: .75rem 1rem;
+  border: 1px solid var(--dim);
+  border-radius: 4px;
+}
+.card header { font-size: 1.05em; margin-bottom: .35em; }
+.card .title { margin: .25em 0 .5em; color: var(--fg); }
+.card .meta { margin: 0; font-size: .9em; color: var(--dim); }
+ul.archive { list-style: none; padding-left: 0; }
+ul.archive li { margin: .35em 0; }
+footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px dashed var(--dim); font-size: .9em; color: var(--dim); }
+footer a { display: inline-flex; align-items: center; gap: .4em; }
+footer .gh { vertical-align: -2px; }
