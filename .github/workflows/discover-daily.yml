@@ -2,7 +2,7 @@ name: discover-daily
 
 on:
   schedule:
-    - cron: "0 9 * * *"   # 09:00 UTC = 01:00 PST / 02:00 PDT
+    - cron: "17 6 * * *"   # 06:17 UTC. Off-peak minute + early hour to reduce cron delay.
   workflow_dispatch:
 
 permissions:
