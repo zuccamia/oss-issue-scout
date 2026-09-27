@@ -1,6 +1,10 @@
 {
   "dates": [
     {
+      "date": "2026-09-27",
+      "accept_count": 0
+    },
+    {
       "date": "2026-09-26",
       "accept_count": 3,
       "top_url": "https://github.com/ClickHouse/clickhouse-connect/issues/192"
