@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use chrono::{Duration, Utc};
+use chrono::{DateTime, Duration, Utc};
 use serde::Deserialize;
 use serde_json::json;
 use std::collections::HashSet;
@@ -9,6 +9,51 @@ use std::time::Duration as StdDuration;
 
 // GitHub search allows 30 authenticated req/min. 2.5s spacing = 24/min, safe headroom.
 const SEARCH_DELAY: StdDuration = StdDuration::from_millis(2500);
+
+// Slots per language in the final shortlist, and total shortlist size.
+const PER_LANGUAGE_CAP: usize = 3;
+const TOTAL_SLOTS: usize = 10;
+
+// Recency half-life in days: pushed today = 1.0, ~30d ago = 0.5, ~90d ago = 0.13.
+fn recency_score(pushed_at: Option<&String>) -> f64 {
+    let Some(iso) = pushed_at else { return 0.0 };
+    let Ok(t) = DateTime::parse_from_rfc3339(iso) else { return 0.0 };
+    let age_days = (Utc::now() - t.with_timezone(&Utc)).num_days().max(0) as f64;
+    (-age_days / 30.0_f64.ln() * (2.0_f64.ln() / 30.0)).exp()
+        .clamp(0.0, 1.0)
+}
+
+// Composite score, dampened star popularity + multi-topic hit bonus + recency.
+fn score(repo: &Repo, hit_count: u32) -> f64 {
+    let star_pop = ((repo.stargazers_count as f64) + 1.0).log10();  // 100★ = 2.0, 10k★ = 4.0
+    let hit_bonus = (hit_count as f64 - 1.0).max(0.0) * 0.5;
+    let recency = recency_score(repo.pushed_at.as_ref());
+    star_pop * 0.4 + hit_bonus + recency
+}
+
+// Bucket by language, sort each bucket by score, then interleave: pick 1 from each
+// language round-robin until slots fill. Prevents Python from eating the shortlist.
+fn rank_and_allocate(
+    hits: std::collections::HashMap<String, (Repo, u32)>,
+    per_lang_cap: usize,
+    total: usize,
+) -> Vec<(Repo, u32)> {
+    use std::collections::HashMap;
+    let mut per_lang: HashMap<String, Vec<(Repo, u32, f64)>> = HashMap::new();
+    for (_, (repo, h)) in hits {
+        let s = score(&repo, h);
+        let lang = repo.language.clone().unwrap_or_else(|| "_other".into());
+        per_lang.entry(lang).or_default().push((repo, h, s));
+    }
+    for v in per_lang.values_mut() {
+        v.sort_by(|a, b| b.2.partial_cmp(&a.2).unwrap_or(std::cmp::Ordering::Equal));
+        v.truncate(per_lang_cap);
+    }
+    let mut out: Vec<(Repo, u32, f64)> = per_lang.into_values().flatten().collect();
+    out.sort_by(|a, b| b.2.partial_cmp(&a.2).unwrap_or(std::cmp::Ordering::Equal));
+    out.truncate(total);
+    out.into_iter().map(|(r, h, _)| (r, h)).collect()
+}
 
 use oss_issue_scout::config;
 
@@ -34,7 +79,7 @@ struct SearchResult {
     items: Vec<Repo>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 struct Repo {
     full_name: String,
     stargazers_count: u32,
@@ -44,6 +89,8 @@ struct Repo {
     language: Option<String>,
     #[serde(default)]
     open_issues_count: u32,
+    #[serde(default)]
+    pushed_at: Option<String>,
 }
 
 fn token() -> Result<String> {
@@ -107,17 +154,19 @@ fn main() -> Result<()> {
         .format("%Y-%m-%d")
         .to_string();
 
-    let mut proposals: Vec<Repo> = Vec::new();
-    let mut seen: HashSet<String> = HashSet::new();
-
     let qualifiers: Vec<String> = if d.criteria.newcomer_qualifiers.is_empty() {
         vec![String::new()]
     } else {
         d.criteria.newcomer_qualifiers.clone()
     };
 
+    // full_name -> (repo, hit_count). Hit count = distinct (lang, topic) combos
+    // that returned this repo. A repo tagged multiple relevant topics gets a bonus.
+    let mut hits: std::collections::HashMap<String, (Repo, u32)> = Default::default();
+
     for lang in &d.criteria.languages {
         for topic in &d.criteria.topics_any {
+            let mut combo_seen: HashSet<String> = HashSet::new();
             for qual in &qualifiers {
                 let mut q = format!(
                     "language:{lang} topic:{topic} stars:>={} pushed:>{}",
@@ -135,17 +184,19 @@ fn main() -> Result<()> {
                     Err(e) => { eprintln!("  search failed: {e:#}"); continue; }
                 };
                 for repo in r.items {
-                    if skip.contains(&repo.full_name) || !seen.insert(repo.full_name.clone()) {
-                        continue;
-                    }
-                    proposals.push(repo);
+                    if skip.contains(&repo.full_name) { continue; }
+                    // Count this repo at most once per (lang, topic), even if it
+                    // appears under both newcomer qualifiers.
+                    if !combo_seen.insert(repo.full_name.clone()) { continue; }
+                    hits.entry(repo.full_name.clone())
+                        .and_modify(|(_, h)| *h += 1)
+                        .or_insert((repo, 1));
                 }
             }
         }
     }
 
-    proposals.sort_by_key(|r| std::cmp::Reverse(r.stargazers_count));
-    proposals.truncate(10);
+    let proposals = rank_and_allocate(hits, PER_LANGUAGE_CAP, TOTAL_SLOTS);
 
     if proposals.is_empty() {
         eprintln!("no new candidates.");
@@ -154,12 +205,14 @@ fn main() -> Result<()> {
     }
 
     let mut msg = format!("🔍 scout discovery — {} new candidate(s)\n", proposals.len());
-    for (i, r) in proposals.iter().enumerate() {
+    for (i, (r, hits)) in proposals.iter().enumerate() {
         let desc = r.description.as_deref().unwrap_or("").chars().take(90).collect::<String>();
         let lang = r.language.as_deref().unwrap_or("-");
+        let pushed = r.pushed_at.as_deref().map(|s| &s[..10.min(s.len())]).unwrap_or("?");
+        let hits_note = if *hits > 1 { format!(" · {hits}× topic hits") } else { String::new() };
         msg.push_str(&format!(
-            "\n{}. *{}* — {} · {}★ · {} open issues\n   _{}_\n   <{}|promote to watched>\n",
-            i + 1, r.full_name, lang, r.stargazers_count, r.open_issues_count, desc,
+            "\n{}. <https://github.com/{}|*{}*> — {} · {}★ · {} open issues · pushed {}{}\n   _{}_ | <{}|watch>\n",
+            i + 1, r.full_name, r.full_name, lang, r.stargazers_count, r.open_issues_count, pushed, hits_note, desc,
             promote_link(&scout_repo, &r.full_name)
         ));
     }
