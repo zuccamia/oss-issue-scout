@@ -25,10 +25,19 @@ pub struct AcceptEntry {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RejectRef {
+    pub url: String,
+    pub updated_at: String,
+    #[serde(default)]
+    pub failed_checks: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Payload {
     pub date: NaiveDate,
     pub accepts: Vec<AcceptEntry>,
-    pub reject_count: usize,
+    #[serde(default)]
+    pub rejects: Vec<RejectRef>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -57,6 +66,17 @@ pub struct IssueMeta {
     pub has_comments: bool,
 }
 
+fn failed_check_names(checks: &[serde_json::Value]) -> Vec<String> {
+    checks.iter()
+        .filter_map(|c| {
+            let obj = c.as_object()?;
+            let grade = obj.get("grade")?.as_str()?;
+            if grade.eq_ignore_ascii_case("pass") { return None; }
+            obj.get("name")?.as_str().map(String::from)
+        })
+        .collect()
+}
+
 pub fn build(
     date: NaiveDate,
     verdicts: &[Verdict],
@@ -78,13 +98,19 @@ pub fn build(
             note: v.note.clone(),
         }))
         .collect();
-    accepts.sort_by(|a, b| b.updated_at.cmp(&a.updated_at));
+    accepts.sort_by_key(|a| std::cmp::Reverse(a.updated_at.clone()));
 
-    let reject_count = verdicts.iter()
+    let rejects: Vec<RejectRef> = verdicts
+        .iter()
         .filter(|v| v.verdict.eq_ignore_ascii_case("reject"))
-        .count();
+        .filter_map(|v| meta.get(&v.item).map(|m| RejectRef {
+            url: v.item.clone(),
+            updated_at: m.updated_at.clone(),
+            failed_checks: failed_check_names(&v.checks),
+        }))
+        .collect();
 
-    Payload { date, accepts, reject_count }
+    Payload { date, accepts, rejects }
 }
 
 pub fn write(payload: &Payload) -> Result<()> {
@@ -130,4 +156,34 @@ pub fn load(date: NaiveDate) -> Result<Option<Payload>> {
         return Ok(None);
     }
     Ok(Some(serde_json::from_str(&fs::read_to_string(path)?)?))
+}
+
+// Cache lookup keyed by url. Value is (updated_at_when_last_graded, prior_Verdict).
+// If today's issue's updated_at matches the cached one, reuse the verdict.
+pub type Cache = HashMap<String, (String, Verdict)>;
+
+pub fn cache_from_yesterday(today: NaiveDate) -> Cache {
+    let Some(y) = today.pred_opt() else { return HashMap::new() };
+    let Ok(Some(p)) = load(y) else { return HashMap::new() };
+    let mut c = HashMap::new();
+    for a in p.accepts {
+        c.insert(a.url.clone(), (a.updated_at, Verdict {
+            item: a.url,
+            checks: vec![],
+            verdict: "accept".into(),
+            note: a.note,
+        }));
+    }
+    for r in p.rejects {
+        let checks = r.failed_checks.iter()
+            .map(|name| serde_json::json!({ "name": name, "grade": "fail" }))
+            .collect();
+        c.insert(r.url.clone(), (r.updated_at, Verdict {
+            item: r.url,
+            checks,
+            verdict: "reject".into(),
+            note: None,
+        }));
+    }
+    c
 }

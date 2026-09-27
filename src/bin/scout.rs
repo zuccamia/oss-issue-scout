@@ -37,7 +37,19 @@ fn main() -> Result<()> {
     }
     eprintln!("built {} evidence packets", packets.len());
 
-    let verdicts = grade::grade_batch(&packets)?;
+    let cache = payload::cache_from_yesterday(today);
+    let (cached, to_grade): (Vec<_>, Vec<_>) = packets.into_iter().partition(|(url, _)| {
+        meta.get(url)
+            .zip(cache.get(url))
+            .is_some_and(|(m, (cached_updated, _))| &m.updated_at == cached_updated)
+    });
+    eprintln!("cache: {} hits, {} to grade", cached.len(), to_grade.len());
+
+    let mut verdicts: Vec<grade::Verdict> = cached
+        .into_iter()
+        .filter_map(|(url, _)| cache.get(&url).map(|(_, v)| v.clone()))
+        .collect();
+    verdicts.extend(grade::grade_batch(&to_grade)?);
 
     let p = payload::build(today, &verdicts, &meta);
     payload::write(&p)?;

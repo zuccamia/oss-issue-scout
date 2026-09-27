@@ -33,7 +33,8 @@ function renderCard(a) {
 }
 
 function renderReport(payload, mount) {
-  const stats = `<p><strong>${payload.date}</strong> · ${payload.accepts.length} accepts · ${payload.reject_count} rejects</p>`;
+  const rejectCount = payload.rejects?.length ?? 0;
+  const stats = `<p><strong>${payload.date}</strong> · ${payload.accepts.length} accepts · ${rejectCount} rejects</p>`;
   const legend = `<p class="legend">Claim heat: 🟢 clean · 🟡 comments only · 🟠 assigned</p>`;
   const cards = payload.accepts.length
     ? payload.accepts.slice(0, 5).map(renderCard).join("")

@@ -1,8 +1,9 @@
 :root {
-  --bg: #0d0f0d;
-  --fg: #c6f0c8;
-  --dim: #6f8f70;
-  --accent: #ffcf3b;
+  --bg: #eceff4;
+  --fg: #4c566a;
+  --dim: #a9b0bb;
+  --accent: #5e81ac;
+  --accent-soft: rgba(94, 129, 172, .12);
 }
 html, body {
   background: var(--bg);
@@ -22,7 +23,7 @@ h1, h2, h3 {
   padding-bottom: .25rem;
 }
 a { color: var(--accent); }
-a:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+a:hover { background: var(--accent); color: #fff; text-decoration: none; }
 blockquote {
   border-left: 3px solid var(--dim);
   margin: 0 0 1rem;
