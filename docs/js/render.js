@@ -33,13 +33,65 @@ function renderCard(a) {
 }
 
 function renderReport(payload, mount) {
-  const rejectCount = payload.rejects?.length ?? 0;
-  const stats = `<p><strong>${payload.date}</strong> · ${payload.accepts.length} accepts · ${rejectCount} rejects</p>`;
+  const rejects = payload.rejects ?? [];
+  const stats = `<p><strong>${payload.date}</strong> · ${payload.accepts.length} accepts · ${rejects.length} rejects</p>`;
   const legend = `<p class="legend">Claim heat: 🟢 clean · 🟡 comments only · 🟠 assigned</p>`;
   const cards = payload.accepts.length
     ? payload.accepts.slice(0, 5).map(renderCard).join("")
     : `<p><em>No accepts.</em></p>`;
-  mount.innerHTML = stats + legend + `<h2>Top candidates</h2>` + cards;
+  mount.innerHTML = stats + legend + `<h2>Top candidates</h2>` + cards + renderRejects(rejects);
+}
+
+// Human-readable rendering of failed check names. Unknown checks fall through
+// to their raw name so custom rubric checks still show up.
+const FAILED_LABEL = {
+  "no-open-linked-pr": "PR already open",
+  "recent-default-branch-commits": "stale repo",
+  "maintainer-response-sample": "slow to respond",
+  "repo-not-archived": "archived",
+  "repo-in-active-use": "inactive",
+  "bounded-newcomer-scope": "unclear scope",
+  "not-support-request": "support question",
+  "has-triage-label": "untriaged",
+  "no-ai-contribution-ban": "AI banned",
+  "good-first-issue-label": "no gfi label",
+  "no-abandoned-attempts": "prior attempts",
+};
+
+function checkLabel(name) {
+  return FAILED_LABEL[name] || name;
+}
+
+function renderRejects(rejects) {
+  if (!rejects.length) return "";
+
+  // Aggregate: count how often each check fails.
+  const counts = new Map();
+  rejects.forEach(r => (r.failed_checks || []).forEach(name => {
+    counts.set(name, (counts.get(name) || 0) + 1);
+  }));
+  const topFailed = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, n]) => `<code title="${escape(name)}">${escape(checkLabel(name))}</code> (${n})`)
+    .join(" ");
+
+  // Recent rejects: sort by updated_at desc, take 10.
+  const recent = [...rejects]
+    .sort((a, b) => b.updated_at.localeCompare(a.updated_at))
+    .slice(0, 10);
+
+  const rows = recent.map(r => {
+    const m = r.url.match(/github\.com\/[^/]+\/([^/]+)\/issues\/(\d+)/);
+    const label = m ? `${m[1]}#${m[2]}` : r.url;
+    const chips = (r.failed_checks || []).map(c => `<code title="${escape(c)}">${escape(checkLabel(c))}</code>`).join(" ");
+    return `<li><a target="_blank" rel="noopener noreferrer" href="${escape(r.url)}">${escape(label)}</a> · ${chips}</li>`;
+  }).join("");
+
+  return `<details class="rejects">
+    <summary>Rejects (${rejects.length}) — top reasons: ${topFailed || "none"}</summary>
+    <ul class="rejects-list">${rows}</ul>
+  </details>`;
 }
 
 function escape(s) {

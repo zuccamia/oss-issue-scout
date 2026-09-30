@@ -13,14 +13,19 @@ fn main() -> Result<()> {
     let mut meta: HashMap<String, IssueMeta> = HashMap::new();
     for repo in &cfg.watched {
         eprintln!("fetching {repo}...");
-        let facts = github::fetch_repo_facts(repo)?;
+        let ctx = evidence::RepoContext {
+            facts: github::fetch_repo_facts(repo)?,
+            last_commits: github::fetch_last_commits(repo).unwrap_or_default(),
+            contribution_policy: github::fetch_contribution_policy(repo),
+        };
         for issue in github::fetch_open_issues(repo)? {
             let comments = if issue.comments > 0 {
                 github::fetch_comments(repo, issue.number).unwrap_or_default()
             } else {
                 vec![]
             };
-            let text = evidence::build(repo, &facts, &issue, &comments);
+            let linked_prs = github::fetch_linked_prs(repo, issue.number).unwrap_or_default();
+            let text = evidence::build(repo, &ctx, &issue, &comments, &linked_prs);
             let url = issue.html_url.clone();
             meta.insert(url.clone(), IssueMeta {
                 repo: repo.clone(),

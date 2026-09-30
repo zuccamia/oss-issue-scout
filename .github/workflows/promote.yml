@@ -10,12 +10,30 @@ permissions:
 
 jobs:
   promote:
-    if: github.event.label.name == 'promote'
+    if: |
+      github.event.label.name == 'promote'
+      && github.event.sender.login == github.repository_owner
     runs-on: ubuntu-latest
+    env:
+      MAX_WATCHED: 20
     steps:
       - uses: actions/checkout@v4
 
+      - name: Enforce watched.yml cap
+        id: cap
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          count=$(python3 -c 'import yaml; print(len((yaml.safe_load(open("watched.yml")) or {}).get("watched", [])))')
+          if [ "$count" -ge "$MAX_WATCHED" ]; then
+            gh issue comment "$ISSUE" --body "watched.yml at cap ($count/$MAX_WATCHED). Remove one first."
+            gh issue close "$ISSUE"
+            echo "hit=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Parse issue body and append to watched.yml
+        if: steps.cap.outputs.hit != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.number }}
@@ -38,6 +56,7 @@ jobs:
           PY
 
       - name: Commit and close
+        if: steps.cap.outputs.hit != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.number }}

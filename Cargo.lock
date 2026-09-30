@@ -379,6 +379,7 @@ name = "oss-issue-scout"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64",
  "chrono",
  "serde",
  "serde_json",

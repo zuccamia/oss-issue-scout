@@ -56,6 +56,12 @@ code {
 .card .meta { margin: 0; font-size: .9em; color: var(--dim); }
 ul.archive { list-style: none; padding-left: 0; }
 ul.archive li { margin: .35em 0; }
+.rejects { margin-top: 2rem; }
+.rejects summary { cursor: pointer; color: var(--dim); font-size: .95em; padding: .5em 0; }
+.rejects summary:hover { color: var(--fg); }
+.rejects-list { list-style: none; padding-left: 0; font-size: .9em; }
+.rejects-list li { margin: .4em 0; color: var(--dim); }
+.rejects-list a { color: var(--fg); }
 footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px dashed var(--dim); font-size: .9em; color: var(--dim); }
 footer a { display: inline-flex; align-items: center; gap: .4em; }
 footer .gh { vertical-align: -2px; }
