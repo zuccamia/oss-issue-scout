@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-10-08",
+      "accept_count": 95,
+      "top_url": "https://github.com/etcd-io/etcd/issues/22532"
+    },
+    {
       "date": "2026-10-07",
       "accept_count": 94,
       "top_url": "https://github.com/chdb-io/chdb/issues/655"
