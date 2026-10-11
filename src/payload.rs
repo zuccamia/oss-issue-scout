@@ -18,7 +18,6 @@ pub struct AcceptEntry {
     pub labels: Vec<String>,
     pub updated_at: String,
     pub comment_count: u32,
-    pub has_assignee: bool,
     pub has_comments: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
@@ -62,7 +61,6 @@ pub struct IssueMeta {
     pub labels: Vec<String>,
     pub updated_at: String,
     pub comment_count: u32,
-    pub has_assignee: bool,
     pub has_comments: bool,
 }
 
@@ -93,7 +91,6 @@ pub fn build(
             labels: m.labels.clone(),
             updated_at: m.updated_at.clone(),
             comment_count: m.comment_count,
-            has_assignee: m.has_assignee,
             has_comments: m.has_comments,
             note: v.note.clone(),
         }))

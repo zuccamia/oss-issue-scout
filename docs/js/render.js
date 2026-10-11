@@ -11,7 +11,6 @@ function relativeAge(iso) {
 }
 
 function heat(a) {
-  if (a.has_assignee) return "🟠";
   if (a.has_comments) return "🟡";
   return "🟢";
 }
@@ -35,7 +34,7 @@ function renderCard(a) {
 function renderReport(payload, mount) {
   const rejects = payload.rejects ?? [];
   const stats = `<p><strong>${payload.date}</strong> · ${payload.accepts.length} accepts · ${rejects.length} rejects</p>`;
-  const legend = `<p class="legend">Claim heat: 🟢 clean · 🟡 comments only · 🟠 assigned</p>`;
+  const legend = `<p class="legend">Claim heat: 🟢 clean · 🟡 comments only</p>`;
   const cards = payload.accepts.length
     ? payload.accepts.slice(0, 5).map(renderCard).join("")
     : `<p><em>No accepts.</em></p>`;

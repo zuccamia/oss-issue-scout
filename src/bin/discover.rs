@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
 use chrono::{DateTime, Duration, Utc};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::collections::HashSet;
 use std::fs;
@@ -12,7 +12,28 @@ const SEARCH_DELAY: StdDuration = StdDuration::from_millis(2500);
 
 // Slots per language in the final shortlist, and total shortlist size.
 const PER_LANGUAGE_CAP: usize = 3;
-const TOTAL_SLOTS: usize = 10;
+const TOTAL_SLOTS: usize = 1;
+
+// Repos already proposed on earlier days, committed by the workflow so they never repeat.
+const PROPOSED_PATH: &str = "cache/proposed.yml";
+
+#[derive(Debug, Default, Deserialize, Serialize)]
+struct Proposed {
+    proposed: Vec<String>,
+}
+
+fn load_proposed() -> Vec<String> {
+    fs::read_to_string(PROPOSED_PATH)
+        .ok()
+        .and_then(|s| serde_yaml::from_str::<Proposed>(&s).ok())
+        .unwrap_or_default()
+        .proposed
+}
+
+fn save_proposed(repos: Vec<String>) -> Result<()> {
+    fs::write(PROPOSED_PATH, serde_yaml::to_string(&Proposed { proposed: repos })?)?;
+    Ok(())
+}
 
 // Recency half-life in days: pushed today = 1.0, ~30d ago = 0.5, ~90d ago = 0.13.
 fn recency_score(pushed_at: Option<&String>) -> f64 {
@@ -149,6 +170,8 @@ fn main() -> Result<()> {
 
     let mut skip: HashSet<String> = watched.into_iter().collect();
     skip.extend(d.rejected.iter().cloned());
+    let mut proposed = load_proposed();
+    skip.extend(proposed.iter().cloned());
 
     let pushed_since = (Utc::now() - Duration::days(d.criteria.pushed_within_days))
         .format("%Y-%m-%d")
@@ -217,7 +240,12 @@ fn main() -> Result<()> {
         ));
     }
 
+    msg.push_str(&format!("\n<{}|Daily scout report>\n", oss_issue_scout::notify::SITE_URL));
+
     slack_notify(&msg)?;
     println!("{msg}");
+
+    proposed.extend(proposals.iter().map(|(r, _)| r.full_name.clone()));
+    save_proposed(proposed)?;
     Ok(())
 }

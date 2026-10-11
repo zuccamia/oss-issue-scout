@@ -69,7 +69,7 @@ pub struct User {
 
 pub fn fetch_open_issues(repo: &str) -> Result<Vec<Issue>> {
     let items: Vec<Issue> = get(&format!(
-        "{API}/repos/{repo}/issues?state=open&per_page=100&sort=updated"
+        "{API}/repos/{repo}/issues?state=open&assignee=none&per_page=100&sort=updated"
     ))?;
     Ok(items.into_iter().filter(|i| i.pull_request.is_none()).collect())
 }

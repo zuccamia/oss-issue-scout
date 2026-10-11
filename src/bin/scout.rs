@@ -34,7 +34,6 @@ fn main() -> Result<()> {
                 labels: issue.labels.iter().map(|l| l.name.clone()).collect(),
                 updated_at: issue.updated_at.clone(),
                 comment_count: issue.comments,
-                has_assignee: !issue.assignees.is_empty(),
                 has_comments: issue.comments > 0,
             });
             packets.push((url, text));
