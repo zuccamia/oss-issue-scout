@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-10-11",
+      "accept_count": 88,
+      "top_url": "https://github.com/chdb-io/chdb/issues/655"
+    },
+    {
       "date": "2026-10-10",
       "accept_count": 94,
       "top_url": "https://github.com/ClickHouse/clickhouse-go/issues/2062"
