@@ -1,2 +1,3 @@
 proposed:
 - meilisearch/meilisearch
+- ClickHouse/ClickHouse
