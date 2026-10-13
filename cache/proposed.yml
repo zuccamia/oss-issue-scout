@@ -1,3 +1,4 @@
 proposed:
 - meilisearch/meilisearch
 - ClickHouse/ClickHouse
+- valeriansaliou/sonic
