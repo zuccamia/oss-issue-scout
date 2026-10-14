@@ -6,3 +6,4 @@ watched:
 - ClickHouse/clickhouse-go
 - etcd-io/etcd
 - chdb-io/chdb
+- valeriansaliou/sonic
