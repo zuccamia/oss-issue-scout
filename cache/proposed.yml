@@ -2,3 +2,4 @@ proposed:
 - meilisearch/meilisearch
 - ClickHouse/ClickHouse
 - valeriansaliou/sonic
+- arc53/DocsGPT
