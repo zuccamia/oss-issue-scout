@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-10-15",
+      "accept_count": 97,
+      "top_url": "https://github.com/ClickHouse/clickhouse-go/issues/2067"
+    },
+    {
       "date": "2026-10-14",
       "accept_count": 90,
       "top_url": "https://github.com/etcd-io/etcd/issues/22574"
