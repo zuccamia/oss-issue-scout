@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-10-19",
+      "accept_count": 98,
+      "top_url": "https://github.com/valeriansaliou/sonic/issues/394"
+    },
+    {
       "date": "2026-10-18",
       "accept_count": 96,
       "top_url": "https://github.com/etcd-io/etcd/issues/22610"
