@@ -8,3 +8,4 @@ proposed:
 - databendlabs/databend
 - oceanbase/oceanbase
 - stoneatom/stonedb
+- netdata/netdata
