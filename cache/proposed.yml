@@ -9,3 +9,4 @@ proposed:
 - oceanbase/oceanbase
 - stoneatom/stonedb
 - netdata/netdata
+- unum-cloud/USearch
