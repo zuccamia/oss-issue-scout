@@ -7,3 +7,4 @@ watched:
 - etcd-io/etcd
 - chdb-io/chdb
 - valeriansaliou/sonic
+- sharkdp/fd
