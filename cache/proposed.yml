@@ -10,3 +10,4 @@ proposed:
 - stoneatom/stonedb
 - netdata/netdata
 - unum-cloud/USearch
+- sharkdp/fd
