@@ -11,3 +11,4 @@ proposed:
 - netdata/netdata
 - unum-cloud/USearch
 - sharkdp/fd
+- pingcap/tidb
