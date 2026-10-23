@@ -8,3 +8,4 @@ watched:
 - chdb-io/chdb
 - valeriansaliou/sonic
 - sharkdp/fd
+- pingcap/tidb
