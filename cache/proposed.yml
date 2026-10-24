@@ -12,3 +12,4 @@ proposed:
 - unum-cloud/USearch
 - sharkdp/fd
 - pingcap/tidb
+- BurntSushi/ripgrep
