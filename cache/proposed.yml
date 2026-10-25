@@ -13,3 +13,4 @@ proposed:
 - sharkdp/fd
 - pingcap/tidb
 - BurntSushi/ripgrep
+- searxng/searxng
