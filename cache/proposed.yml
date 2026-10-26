@@ -14,3 +14,4 @@ proposed:
 - pingcap/tidb
 - BurntSushi/ripgrep
 - searxng/searxng
+- qdrant/qdrant
