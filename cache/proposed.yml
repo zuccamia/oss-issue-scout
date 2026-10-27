@@ -15,3 +15,4 @@ proposed:
 - BurntSushi/ripgrep
 - searxng/searxng
 - qdrant/qdrant
+- dragonflydb/dragonfly
