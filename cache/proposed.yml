@@ -16,3 +16,4 @@ proposed:
 - searxng/searxng
 - qdrant/qdrant
 - dragonflydb/dragonfly
+- surrealdb/surrealdb
