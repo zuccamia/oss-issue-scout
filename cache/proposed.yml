@@ -17,3 +17,4 @@ proposed:
 - qdrant/qdrant
 - dragonflydb/dragonfly
 - surrealdb/surrealdb
+- onyx-dot-app/onyx
