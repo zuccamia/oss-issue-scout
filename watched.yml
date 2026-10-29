@@ -9,3 +9,4 @@ watched:
 - valeriansaliou/sonic
 - sharkdp/fd
 - pingcap/tidb
+- apache/datafusion
