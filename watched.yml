@@ -10,3 +10,4 @@ watched:
 - sharkdp/fd
 - pingcap/tidb
 - apache/datafusion
+- dragonflydb/dragonfly
