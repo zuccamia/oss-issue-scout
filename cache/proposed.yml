@@ -18,3 +18,4 @@ proposed:
 - dragonflydb/dragonfly
 - surrealdb/surrealdb
 - onyx-dot-app/onyx
+- nhost/nhost
