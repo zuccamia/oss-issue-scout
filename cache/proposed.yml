@@ -19,3 +19,4 @@ proposed:
 - surrealdb/surrealdb
 - onyx-dot-app/onyx
 - nhost/nhost
+- influxdata/influxdb
