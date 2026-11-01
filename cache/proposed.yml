@@ -20,3 +20,4 @@ proposed:
 - onyx-dot-app/onyx
 - nhost/nhost
 - influxdata/influxdb
+- gluesql/gluesql
