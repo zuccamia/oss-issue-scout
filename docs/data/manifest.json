@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-02",
+      "accept_count": 145,
+      "top_url": "https://github.com/pingcap/tidb/issues/72501"
+    },
+    {
       "date": "2026-11-01",
       "accept_count": 143,
       "top_url": "https://github.com/apache/datafusion/issues/26990"
