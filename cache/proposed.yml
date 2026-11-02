@@ -21,3 +21,4 @@ proposed:
 - nhost/nhost
 - influxdata/influxdb
 - gluesql/gluesql
+- cockroachdb/cockroach
