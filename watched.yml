@@ -11,3 +11,4 @@ watched:
 - pingcap/tidb
 - apache/datafusion
 - dragonflydb/dragonfly
+- typesense/typesense
