@@ -23,3 +23,4 @@ proposed:
 - gluesql/gluesql
 - cockroachdb/cockroach
 - chroma-core/chroma
+- typesense/typesense
