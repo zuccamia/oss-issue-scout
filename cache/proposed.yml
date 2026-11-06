@@ -25,3 +25,4 @@ proposed:
 - chroma-core/chroma
 - typesense/typesense
 - tursodatabase/turso
+- dolthub/dolt
