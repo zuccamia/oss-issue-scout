@@ -12,3 +12,4 @@ watched:
 - apache/datafusion
 - dragonflydb/dragonfly
 - typesense/typesense
+- dolthub/dolt
