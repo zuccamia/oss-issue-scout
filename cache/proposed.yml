@@ -26,3 +26,4 @@ proposed:
 - typesense/typesense
 - tursodatabase/turso
 - dolthub/dolt
+- sqlitebrowser/sqlitebrowser
