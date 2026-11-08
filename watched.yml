@@ -13,3 +13,4 @@ watched:
 - dragonflydb/dragonfly
 - typesense/typesense
 - dolthub/dolt
+- getredash/redash
