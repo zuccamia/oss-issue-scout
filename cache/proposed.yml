@@ -27,3 +27,4 @@ proposed:
 - tursodatabase/turso
 - dolthub/dolt
 - sqlitebrowser/sqlitebrowser
+- eosphoros-ai/DB-GPT
