@@ -28,3 +28,4 @@ proposed:
 - dolthub/dolt
 - sqlitebrowser/sqlitebrowser
 - eosphoros-ai/DB-GPT
+- mariadb-operator/mariadb-operator
