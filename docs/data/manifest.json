@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-09",
+      "accept_count": 206,
+      "top_url": "https://github.com/etcd-io/etcd/issues/22750"
+    },
+    {
       "date": "2026-11-08",
       "accept_count": 168,
       "top_url": "https://github.com/apache/datafusion/issues/27233"
