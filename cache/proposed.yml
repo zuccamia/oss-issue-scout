@@ -30,3 +30,4 @@ proposed:
 - eosphoros-ai/DB-GPT
 - mariadb-operator/mariadb-operator
 - VictoriaMetrics/VictoriaMetrics
+- rqlite/rqlite
