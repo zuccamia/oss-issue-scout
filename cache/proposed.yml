@@ -31,3 +31,4 @@ proposed:
 - mariadb-operator/mariadb-operator
 - VictoriaMetrics/VictoriaMetrics
 - rqlite/rqlite
+- serenedb/serenedb
