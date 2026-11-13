@@ -32,3 +32,4 @@ proposed:
 - VictoriaMetrics/VictoriaMetrics
 - rqlite/rqlite
 - serenedb/serenedb
+- duckdb/duckdb-rs
