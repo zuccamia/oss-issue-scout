@@ -33,3 +33,4 @@ proposed:
 - rqlite/rqlite
 - serenedb/serenedb
 - duckdb/duckdb-rs
+- golang-migrate/migrate
