@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-15",
+      "accept_count": 215,
+      "top_url": "https://github.com/chdb-io/chdb/issues/800"
+    },
+    {
       "date": "2026-11-14",
       "accept_count": 202,
       "top_url": "https://github.com/apache/datafusion/issues/27429"
