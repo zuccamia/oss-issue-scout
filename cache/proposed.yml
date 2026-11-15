@@ -34,3 +34,4 @@ proposed:
 - serenedb/serenedb
 - duckdb/duckdb-rs
 - golang-migrate/migrate
+- pisa-engine/pisa
