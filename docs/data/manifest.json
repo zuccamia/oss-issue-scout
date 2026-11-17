@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-17",
+      "accept_count": 195,
+      "top_url": "https://github.com/ClickHouse/ch-go/issues/1053"
+    },
+    {
       "date": "2026-11-16",
       "accept_count": 199,
       "top_url": "https://github.com/pingcap/tidb/issues/73230"
