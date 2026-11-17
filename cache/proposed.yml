@@ -36,3 +36,4 @@ proposed:
 - golang-migrate/migrate
 - pisa-engine/pisa
 - googleapis/mcp-toolbox
+- ast-grep/ast-grep
