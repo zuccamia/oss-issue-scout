@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-18",
+      "accept_count": 183,
+      "top_url": "https://github.com/typesense/typesense/issues/3186"
+    },
+    {
       "date": "2026-11-17",
       "accept_count": 195,
       "top_url": "https://github.com/ClickHouse/ch-go/issues/1053"
