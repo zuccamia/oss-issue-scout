@@ -37,3 +37,4 @@ proposed:
 - pisa-engine/pisa
 - googleapis/mcp-toolbox
 - ast-grep/ast-grep
+- modelscope/ms-swift
