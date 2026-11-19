@@ -38,3 +38,4 @@ proposed:
 - googleapis/mcp-toolbox
 - ast-grep/ast-grep
 - modelscope/ms-swift
+- go-sql-driver/mysql
