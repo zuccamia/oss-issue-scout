@@ -39,3 +39,4 @@ proposed:
 - ast-grep/ast-grep
 - modelscope/ms-swift
 - go-sql-driver/mysql
+- thanos-io/thanos
