@@ -40,3 +40,4 @@ proposed:
 - modelscope/ms-swift
 - go-sql-driver/mysql
 - thanos-io/thanos
+- FerretDB/FerretDB
