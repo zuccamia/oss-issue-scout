@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-21",
+      "accept_count": 166,
+      "top_url": "https://github.com/getredash/redash/issues/4207"
+    },
+    {
       "date": "2026-11-20",
       "accept_count": 167,
       "top_url": "https://github.com/dolthub/dolt/issues/12582"
