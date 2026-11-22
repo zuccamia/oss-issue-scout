@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-22",
+      "accept_count": 195,
+      "top_url": "https://github.com/apache/datafusion/issues/27654"
+    },
+    {
       "date": "2026-11-21",
       "accept_count": 166,
       "top_url": "https://github.com/getredash/redash/issues/4207"
