@@ -16,3 +16,4 @@ watched:
 - getredash/redash
 - rqlite/rqlite
 - googleapis/mcp-toolbox
+- quickwit-oss/quickwit
