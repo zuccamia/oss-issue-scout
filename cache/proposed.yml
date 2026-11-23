@@ -42,3 +42,4 @@ proposed:
 - thanos-io/thanos
 - FerretDB/FerretDB
 - FalkorDB/FalkorDB
+- encoredev/encore
