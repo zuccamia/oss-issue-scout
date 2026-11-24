@@ -43,3 +43,4 @@ proposed:
 - FerretDB/FerretDB
 - FalkorDB/FalkorDB
 - encoredev/encore
+- cloudnative-pg/cloudnative-pg
