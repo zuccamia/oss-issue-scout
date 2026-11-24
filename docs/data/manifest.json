@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-24",
+      "accept_count": 179,
+      "top_url": "https://github.com/typesense/typesense/issues/3099"
+    },
+    {
       "date": "2026-11-23",
       "accept_count": 198,
       "top_url": "https://github.com/pingcap/tidb/issues/73645"
