@@ -44,3 +44,4 @@ proposed:
 - FalkorDB/FalkorDB
 - encoredev/encore
 - cloudnative-pg/cloudnative-pg
+- risingwavelabs/risingwave
