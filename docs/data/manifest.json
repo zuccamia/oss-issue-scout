@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-25",
+      "accept_count": 187,
+      "top_url": "https://github.com/etcd-io/etcd/issues/22954"
+    },
+    {
       "date": "2026-11-24",
       "accept_count": 179,
       "top_url": "https://github.com/typesense/typesense/issues/3099"
