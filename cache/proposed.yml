@@ -45,3 +45,4 @@ proposed:
 - encoredev/encore
 - cloudnative-pg/cloudnative-pg
 - risingwavelabs/risingwave
+- redis/redis-vl-python
