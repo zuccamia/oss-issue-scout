@@ -47,3 +47,4 @@ proposed:
 - risingwavelabs/risingwave
 - redis/redis-vl-python
 - TheAlgorithms/C-Plus-Plus
+- dbcli/pgcli
