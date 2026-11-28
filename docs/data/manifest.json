@@ -1,6 +1,11 @@
 {
   "dates": [
     {
+      "date": "2026-11-28",
+      "accept_count": 206,
+      "top_url": "https://github.com/quickwit-oss/quickwit/issues/7063"
+    },
+    {
       "date": "2026-11-27",
       "accept_count": 214,
       "top_url": "https://github.com/apache/datafusion/issues/27795"
